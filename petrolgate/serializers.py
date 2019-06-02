@@ -1,35 +1,46 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
+from home.models import Data,Info
 
-class Task(object):
-    def __init__(self, **kwargs):
-        for field in ('header', 'right'):
-            setattr(self, field, kwargs.get(field, None))
-
-
-
-
-
-class HeaderSerializer(serializers.Serializer):
-	total = serializers.CharField()
-	revenue = serializers.CharField()
-	growth = serializers.CharField()
-
-
-class RightSerializer(serializers.Serializer):
-	bon = serializers.CharField()
-	cards = serializers.CharField()
-	discounts = serializers.CharField()
-	stock = serializers.CharField()
-	cardsSold = serializers.CharField()
-	bonSold = serializers.CharField()
-	cardsInStock = serializers.CharField()
-		
+class DataSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    header_total = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    header_revenue = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    right_bon = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    right_cards = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    right_discounts = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    right_stock = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    right_cards_sold = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    right_bon_sold = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    right_cards_in_stock = serializers.CharField(required=False, allow_blank=True, max_length=100)
 
 
-class TaskSerializer(serializers.Serializer):
-    header = HeaderSerializer(many = True)
-    right = RightSerializer(many = True)
-   
-   
- 
+    
+
+    def create(self, validated_data):
+        """
+        Create and return a new `Snippet` instance, given the validated data.
+        """
+        return Data.objects.create(**validated_data)
+
+
+class InfoSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    tin_number = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    email = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    phone = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    district = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    sector = serializers.CharField(required=False, allow_blank=True, max_length=100)
+
+
+    
+
+    def create(self, validated_data):
+        """
+        Create and return a new `Snippet` instance, given the validated data.
+        """
+        return Info.objects.create(**validated_data)
+
+
+    

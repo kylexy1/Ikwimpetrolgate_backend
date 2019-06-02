@@ -1,23 +1,20 @@
-from rest_framework import viewsets
-from django.contrib.auth.models import User, Group
-from .serializers import TaskSerializer,Task
-from rest_framework.response import Response
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from home.models import Data,Info
+from .serializers import DataSerializer
 
 
-
-tasks = {"header" : {'total' : '235,890,000 RWF', 'revenue' : '178,908,788 RWF', 'growth' : '+2.0 %'}, "right":{'bon' : '128,978,000 RWF','cards' :'8,978,000 RWF', 'discounts' : '450,000 RWF', 'stock' : '128,978,000 RWF', 'cardsSold' : '450,000 RWF', 'bonSold' : '450,000 RWF', 'cardsInStock' : '8,978,000 RWF'}},
-    
-
+@csrf_exempt
 def getAll(req):
-	return JsonResponse(tasks, safe=False)
+	datas = Data.objects.first()
+	serializer = DataSerializer(datas, many=False)
+	return JsonResponse(serializer.data, safe=False)
 
-# class TaskViewSet(viewsets.ViewSet):
-#     # Required for the Browsable API renderer to have a nice form.
-#     serializer_class = TaskSerializer
 
-#     def list(self, request):
-#         serializer = TaskSerializer(
-#             instance=tasks.values(), many=True)
-#         return Response(serializer.data)
+@csrf_exempt
+def saveFormData(request):
+	i = Info(name=request.POST.get('name'), email=request.POST.get('email'), tin_number=request.POST.get('tin_number'), district=request.POST.get('district'), sector=request.POST.get('sector'), phone=request.POST.get('phone'))
+	i.save()
+	return JsonResponse({'message' : 'success'}, status=201)
+
 
